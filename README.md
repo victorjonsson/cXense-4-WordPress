@@ -27,6 +27,10 @@ The following constants can be used to modify the behaviour of this plugin. Defi
 
 `CXSENSE_ANALYTICS` Boolean, whether or not to include analytics script (default true).
 
+`CXENSE_DEV_SITE_ID` Will be used instead of CXENSE_SITE_ID if defined.
+
+`CXENSE_REPORT_LOCATION` Can be used to override current URL registered for a page view at cXense 
+
 
 ## Actions and filters
 
@@ -35,3 +39,10 @@ The following constants can be used to modify the behaviour of this plugin. Defi
 *cxense_og_url* — Filters the current url.
 
 *cxense_og_image* — Fallback open-graph image used when no other image is available.
+
+
+## Registering page views using AJAX
+
+All you have to do to register a page view using AJAX is to call `$(window).trigger('pageSwipe')` when you want the 
+page view to registered at cXense.
+
