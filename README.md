@@ -40,9 +40,3 @@ The following constants can be used to modify the behaviour of this plugin. Defi
 
 *cxense_og_image* — Fallback open-graph image used when no other image is available.
 
-
-## Registering page views using AJAX
-
-All you have to do to register a page view using AJAX is to call `$(window).trigger('pageSwipe')` when you want the 
-page view to registered at cXense.
-
