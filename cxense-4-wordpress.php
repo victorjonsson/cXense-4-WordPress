@@ -58,11 +58,11 @@ function cxense_output_meta_tags($location=null) {
 
         $og_tags = array(
             'og:title' => get_the_title(),
-            'og:type' => is_single() ? 'article':'website',
             'og:url' => apply_filters('cxense_og_url', get_permalink())
         );
 
-        if( $og_tags['og:type'] == 'article' ) {
+        if( is_single() ) {
+            $og_tags['og:type'] = 'article';
             $og_tags['og:article:published_time'] = date('c', strtotime($post->post_date));
             $og_tags['og:article:author'] = get_user_by('id', $post->post_author)->display_name;
             $og_tags['og:description'] = get_the_excerpt();

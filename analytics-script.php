@@ -1,10 +1,25 @@
-<?php $has_paygate_plugin = defined('PAYGATE_PLUGIN_URL'); ?>
+<?php
+$has_paygate_plugin = defined('PAYGATE_PLUGIN_URL');
+$type = 'other';
+if( is_single() ) {
+    $type = 'article';
+} elseif( is_404() ) {
+    $type = '404';
+} elseif( is_singular() ) {
+    $type = 'page';
+} elseif( is_search() ) {
+    $type = 'search';
+}
+?>
 <div id="cX-root" style="display:none"></div>
 <script type="text/javascript">
 
     var cX = cX || {};
 
-    window.cXCustomParams = {paywall : '<?php echo $has_paygate_plugin && vkwp_is_post_closed() ? 'true':'false' ?>'};
+    window.cXCustomParams = {
+        type: '<?php echo $type ?>',
+        paywall : '<?php echo $has_paygate_plugin && vkwp_is_post_closed() ? 'true':'false' ?>'
+    };
     window.cXUserParams = {};
     window.cXenseSiteID = '<?php echo defined('CXENSE_DEV_SITE_ID') && CXENSE_DEV_SITE_ID ? CXENSE_DEV_SITE_ID:CXENSE_SITE_ID ?>';
 
