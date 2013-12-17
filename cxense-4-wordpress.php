@@ -109,7 +109,6 @@ function cxense_output_meta_tags($location=null) {
         // Tags/category/search etc....
         $og_tags['cXenseParse:recs:recommendable'] = 'false';
         $og_tags['og:url'] = get_site_url().$_SERVER['REQUEST_URI'];
-        $og_tags['og:type'] = 'website';
     }
 
 

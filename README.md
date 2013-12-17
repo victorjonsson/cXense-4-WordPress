@@ -31,6 +31,9 @@ The following constants can be used to modify the behaviour of this plugin. Defi
 
 `CXENSE_REPORT_LOCATION` Used to override current URL (that will get a page view registered at cXense).
 
+`CXENSE_USER_PRODUCTS` Only necessary if you're using the WordPress plugin *paygate*. This constant makes it possible to send which type
+of product your visitor has to cXense as a custom parameter. The constants should contain a comma separated string with product names.
+
 
 ## Actions and filters
 
