@@ -2,9 +2,10 @@
 /*
 Plugin Name: cXense 4 WordPress
 Description: Integrates the website with cXense Analytics and cXense Site Search
-Version: 1.0.0
+Version: 1.0.1
 Author: Victor Jonsson <http://victorjonsson.se/>
 */
+define('CXENSE_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 
 /**
@@ -61,7 +62,11 @@ function cxense_output_meta_tags($location=null) {
             'og:url' => apply_filters('cxense_og_url', get_permalink())
         );
 
-        if( is_single() ) {
+        $recommendable_types = 'post';
+        if( defined('CXENSE_RECOMMENDABLE_POST_TYPES') ) {
+            $recommendable_types = CXENSE_RECOMMENDABLE_POST_TYPES;
+        }
+        if( strpos($recommendable_types, $post->post_type) !== false ) {
             $og_tags['og:type'] = 'article';
             $og_tags['og:article:published_time'] = date('c', strtotime($post->post_date));
             $og_tags['og:article:author'] = get_user_by('id', $post->post_author)->display_name;
@@ -75,8 +80,11 @@ function cxense_output_meta_tags($location=null) {
             }
 
             if( has_post_thumbnail() ) {
-                $large_image_url = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full' );
-                $og_tags['og:image'] = $large_image_url[0];
+                list($src, $width, $height) = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full' );
+                $og_tags['cXenseParse:recs:image'] = $src;
+                if( $width > 200 && $height > 200 ) {
+                    $og_tags['og:image'] = $src;
+                }
             } else {
                 $og_tags['cXenseParse:recs:image'] = 'noimage';
             }
@@ -120,11 +128,21 @@ function cxense_output_meta_tags($location=null) {
         $og_tags['og:url'] = $location;
     }
 
-    // Santitize stuff
+    // Sanitize stuff
     foreach(array('og:title', 'og:description') as $tag => $val) {
         if( !empty($og_tags[$tag]) ) {
             $og_tags[$tag] = trim(str_replace('"','&quot;', $val));
         }
+    }
+
+    if( !empty($_GET['no-cxense-og']) ) {
+        unset($og_tags['og:article:author']);
+        unset($og_tags['cXenseParse:recs:recommendable']);
+        unset($og_tags['cXenseParse:paywall']);
+        unset($og_tags['cXenseParse:recs:paywall']);
+        unset($og_tags['cXenseParse:recs:custom0']);
+        unset($og_tags['cXenseParse:recs:articleid']);
+        $og_tags['og:url'] = add_query_arg('no-cxense-og', '1', $og_tags['og:url']);
     }
 
     foreach($og_tags as $name => $val) {
@@ -132,11 +150,37 @@ function cxense_output_meta_tags($location=null) {
     }
 }
 
+/**
+ * Outputs a cxense widget
+ * @param string $id
+ * @param int $width
+ * @param int $height
+ * @param bool $template - Optional, will default to "default-widget.html" located in this plugin
+ * @param bool $resize_content Optional, whether or not the widget should resize it self after loading
+ */
+function cxense_widget($id, $width, $height, $template=false, $resize_content=true) {
+    static $num_widgets = 1;
+    ?>
+    <div id="cxense-widget-<?php echo $num_widgets ?>"></div>
+    <script>
+        var cX = cX || {}; cX.callQueue = cX.callQueue || [];
+        cX.callQueue.push(['insertWidget',{
+            widgetId: '<?php echo $id ?>',
+            insertBeforeElementId: 'cxense-widget-<?php echo $num_widgets ?>',
+            renderTemplateUrl: '<?php echo $template ? $template : CXENSE_PLUGIN_URL.'/default-widget.html' ?>',
+            resizeToContentSize : <?php echo $resize_content ? 'true':'false' ?>,
+            width: <?php echo $width ?>,
+            height: <?php echo $height ?>
+        }]);
+    </script>
+    <?php
+    $num_widgets++;
+}
 
 /**
  * Outputs javascript that register a pageview at cXense
  */
-function cxense_output_analytics_script() {
+function cxense_analytics_script() {
     if( !defined('CXSENSE_ANALYTICS') || CXSENSE_ANALYTICS ) {
         require __DIR__.'/analytics-script.php';
     }
@@ -160,7 +204,7 @@ add_action('after_setup_theme', function() {
         }
 
         // Add analytics script
-        add_action('wp_footer', 'cxense_output_analytics_script');
+        add_action('wp_footer', 'cxense_analytics_script');
 
     }
 
