@@ -16,7 +16,7 @@ function cxense_ping_crawler($post_id) {
         }
 
         $date = date("o-m-d\TH:i:s.000O");
-        $signature = hash_hmac("sha256", $date, get_option(CXENSE_API_KEY));
+        $signature = hash_hmac("sha256", $date, cxense_get_opt('cxense_api_key'));
 
         $url = is_numeric($post_id) ? get_permalink($post_id) : $post_id;
 
@@ -24,7 +24,7 @@ function cxense_ping_crawler($post_id) {
             'method' => 'POST',
             'body' => json_encode(array('url'=> $url)),
             'headers' => array(
-                'X-cXense-Authentication' => 'username='.get_option(CXENSE_USER_NAME).' date='.$date.' hmac-sha256-hex='.$signature
+                'X-cXense-Authentication' => 'username='.cxense_get_opt('cxense_user_name').' date='.$date.' hmac-sha256-hex='.$signature
             )
         );
 
