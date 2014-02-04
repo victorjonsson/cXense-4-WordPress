@@ -9,7 +9,7 @@ Version: 0.1
 Author URI: webbutvecklare@norran.se
 */
 
-class Norran_CxenseWidget extends WP_Widget {
+class Cxense_Widget extends WP_Widget {
 
     public function __construct(){
         parent::__construct(false, 'Cxense_widget');
@@ -105,15 +105,3 @@ class Norran_CxenseWidget extends WP_Widget {
         return null;
     }
 }
-
-
-
-
-add_action('widgets_init', function () {
-    register_widget('Norran_CxenseWidget');
-});
-
-
-
-
-

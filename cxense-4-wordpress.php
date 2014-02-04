@@ -38,6 +38,13 @@ add_action('admin_menu', function() {
     wp_enqueue_script('admin-'.$js_hook, CXENSE_PLUGIN_URL.'templates/admin/admin-ui.js', array('jquery'), CXENSE_PLUGIN_VERSION);
 });
 
+// Load wp widget
+add_action('widgets_init', function () {
+    require_once __DIR__.'/widget.php';
+    register_widget('Cxense_Widget');
+});
+
+
 if( is_admin() ) {
 
     /* * * * * Plugin admin stuff * * * */
