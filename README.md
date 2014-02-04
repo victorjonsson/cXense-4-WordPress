@@ -29,7 +29,7 @@ The following constants can be used to modify the behaviour of this plugin. Defi
 
 `CXENSE_DEFAULT_SITE_DESC` A description of your website that will be used as og:description when no other description is available.
 
-`CXENSE_DEFAULT_OG_IMAGE` A description of your website that will be used as og:description when no other description is available.
+`CXENSE_DEFAULT_OG_IMAGE` URL to the image that should be used as og:image when no other image is available.
 
 `CXSENSE_ANALYTICS` Boolean, whether or not to include the analytics script (default true).
 
