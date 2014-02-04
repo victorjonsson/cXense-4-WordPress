@@ -1,0 +1,30 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style type="text/css">
+        #templateElement
+        a:link {color:#333333;}
+        a:visited {color:#999999;}
+        a:hover {color:#000000;}
+        a:active {color:#334443;}
+    </style>
+</head>
+<body xmlns:tmp="javascript:">
+<script type="text/javascript" src="http://cdn.cxense.com/cx.js"></script>
+<div id="targetElement">
+    <div id="templateElement">
+        <ul>
+        <!--%
+        var items = data.response.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i]; %-->
+            <li><a class="recs" tmp:id="{{cX.clickTracker(item.click_url)}}" tmp:href="{{item.url}}" tmp:target="_top">{{item.title}}</a></li>
+        <!--% } %-->
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    cX.insertWidget();
+</script>
+</body>
+</html>
