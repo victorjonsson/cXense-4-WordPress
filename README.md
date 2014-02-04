@@ -8,6 +8,7 @@ WordPress plugin that integrates your website with [cXense](http://www.cXense.co
  - Adds content profiling meta tags (open graph) to the header of the HTML document
  - Adds cXense Analytics javascript to wp_footer
  - *(wip)* Replaces WordPress public search with cXense site search
+ - *(wip)* Makes it possible to display recommendation widgets provided by cXense
 
 ## Installation
 
@@ -18,6 +19,8 @@ ID in wp-config.php or in the file functions.php located in your theme.
 ## Optional configuration
 
 The following constants can be used to modify the behaviour of this plugin. Define them in wp-config.php or in the file functions.php located in your theme directory.
+These constants are not mandatory. You can choose to define them in the cXense settings page that can be found in wp-admin. If you
+choose to define these settings in form of constants you can override them using the settings page.
 
 `CXENSE_USER_NAME` and `CXENSE_API_KEY` API user credentials at cXense, used to ping the cXense crawler when a post is created/updated/removed. These constants will speed up the re-indexing of your website when content is changed.
               
@@ -25,21 +28,19 @@ The following constants can be used to modify the behaviour of this plugin. Defi
 
 `CXENSE_DEFAULT_SITE_DESC` A description of your website that will be used as og:description when no other description is available.
 
+`CXENSE_DEFAULT_OG_IMAGE` A description of your website that will be used as og:description when no other description is available.
+
 `CXSENSE_ANALYTICS` Boolean, whether or not to include the analytics script (default true).
-
-`CXENSE_DEV_SITE_ID` Will be used instead of CXENSE_SITE_ID if defined.
-
-`CXENSE_REPORT_LOCATION` Used to override current URL (that will get a page view registered at cXense).
 
 `CXENSE_USER_PRODUCTS` Only necessary if you're using the WordPress plugin *paygate*. This constant makes it possible to send which type
 of product your visitor has to cXense as a custom parameter. The constants should contain a comma separated string with product names.
 
+`CXENSE_RECOMMENDABLE_POST_TYPES` By default only posts with post type "post" will get recommended by the recommendations widgets provided by cXense.
+Use this constant if you want to define which post types that should be recommendable.
+
 
 ## Actions and filters
 
-*cxense_is_recommendable* — Whether or not current URL should be recommendable (strings 'true' or 'false'). Only posts is recommended by default. Use
-this filter if you don't wont certain posts to be recommended by the recommendations widgets provided by cXense.
+*cxense_is_recommendable* — Whether or not current URL should be recommendable (strings 'true' or 'false'). Use this filter if you don't wont certain posts to be recommended by the recommendations widgets provided by cXense.
 
 *cxense_og_url* — Filters the current url that is used as og:url.
-
-*cxense_og_image* — Fallback open-graph image used when no other image is available.

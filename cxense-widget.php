@@ -10,6 +10,7 @@ Author URI: webbutvecklare@norran.se
 */
 
 class Norran_CxenseWidget extends WP_Widget {
+
     public function __construct(){
         parent::__construct(false, 'Cxense_widget');
     }

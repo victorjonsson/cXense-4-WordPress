@@ -1,6 +1,5 @@
 <?php
 
-
 if(isset($_POST['searchTerm']) && isset($_POST['selected']) && isset($_POST['sort']) && isset($_POST['count'])){
     require_once '../../../../wp-load.php';
 
@@ -12,8 +11,7 @@ if(isset($_POST['searchTerm']) && isset($_POST['selected']) && isset($_POST['sor
     $display_image = false;
     $pagination = (isset($_POST['pagination']) && $_POST['pagination'] != '') ? $_POST['pagination'] : 1;
 
-    $url = 'http://sitesearch.cxense.com/api/search/9222329989744432874?p_aq=query('. $_POST['selected'].':"'.urlencode($_POST['searchTerm']).'",token-op=and)&p_c='.$_POST['count'].$sort.'&p_s='.$pagination;
-
+    $url = 'http://sitesearch.cxense.com/api/search/'.cxense_get_opt('cxense_site_id').'?p_aq=query('. $_POST['selected'].':"'.urlencode($_POST['searchTerm']).'",token-op=and)&p_c='.$_POST['count'].$sort.'&p_s='.$pagination;
 
     if(get_transient(md5($url)) == false){
         $response = wp_remote_get($url);

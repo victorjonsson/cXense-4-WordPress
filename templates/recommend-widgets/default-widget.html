@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <style type="text/css">
+        #templateElement {display:none}
+    </style>
+    <script>
+
+    </script>
+</head>
+<body xmlns:tmp="javascript:">
+<script type="text/javascript" src="http://cdn.cxense.com/cx.js"></script>
+<div id="targetElement">
+    <div id="templateElement">
+        <!--%
+        var items = data.response.items;
+        for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+        %-->
+        <div>
+            <a tmp:id="{{cX.clickTracker(item.click_url)}}" tmp:href="{{item.url}}" tmp:target="_top">
+                <img tmp:src="{{item.dominantthumbnail}}" alt="" onerror="this.style.display='none'">
+            </a>
+            <a tmp:id="{{cX.clickTracker(item.click_url)}}" tmp:href="{{item.url}}" tmp:target="_top">
+                {{item.title}}
+            </a>
+            <br />
+            {{item.description}}
+            <hr />
+        </div>
+        <!--%
+        }
+        %-->
+    </div>
+</div>
+<script type="text/javascript">
+    cX.insertWidget();
+</script>
+</body>
+</html>
