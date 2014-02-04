@@ -12,6 +12,7 @@ Author: Victor Jonsson <http://victorjonsson.se/>
  * @param int|string $post_id Either post ID or an URL
  * @return array|null
  */
+
 function cxense_ping_crawler($post_id) {
 
     if( !is_numeric($post_id) || (!wp_is_post_revision($post_id) && !wp_is_post_autosave($post_id)) ) {
@@ -23,7 +24,7 @@ function cxense_ping_crawler($post_id) {
         }
 
         $date = date("o-m-d\TH:i:s.000O");
-        $signature = hash_hmac("sha256", $date, CXENSE_API_KEY);
+        $signature = hash_hmac("sha256", $date, get_option(CXENSE_API_KEY));
 
         $url = is_numeric($post_id) ? get_permalink($post_id) : $post_id;
 
@@ -31,7 +32,7 @@ function cxense_ping_crawler($post_id) {
             'method' => 'POST',
             'body' => json_encode(array('url'=> $url)),
             'headers' => array(
-                'X-cXense-Authentication' => 'username='.CXENSE_USER_NAME.' date='.$date.' hmac-sha256-hex='.$signature
+                'X-cXense-Authentication' => 'username='.get_option(CXENSE_USER_NAME).' date='.$date.' hmac-sha256-hex='.$signature
             )
         );
 
@@ -73,7 +74,6 @@ function cxense_output_meta_tags($location=null) {
             if( mb_strlen($og_tags['og:description'], 'UTF-8') > 75 ) {
                 $og_tags['og:description'] = mb_substr($og_tags['og:description'], 0, 75, 'UTF-8').'...';
             }
-
             if( has_post_thumbnail() ) {
                 $large_image_url = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full' );
                 $og_tags['og:image'] = $large_image_url[0];
@@ -109,6 +109,7 @@ function cxense_output_meta_tags($location=null) {
         // Tags/category/search etc....
         $og_tags['cXenseParse:recs:recommendable'] = 'false';
         $og_tags['og:url'] = get_site_url().$_SERVER['REQUEST_URI'];
+        $og_tags['og:type'] = 'website';
     }
 
 
@@ -138,7 +139,7 @@ function cxense_output_meta_tags($location=null) {
  */
 function cxense_output_analytics_script() {
     if( !defined('CXSENSE_ANALYTICS') || CXSENSE_ANALYTICS ) {
-        require __DIR__.'/analytics-script.php';
+        require __DIR__ . '/analytics-script.php';
     }
 }
 
@@ -165,3 +166,27 @@ add_action('after_setup_theme', function() {
     }
 
 });
+
+function cxense_settings_page(){
+    require_once 'templates/admin-settings-page.php';
+    wp_enqueue_script('pingu-admin-ui', plugin_dir_url(__FILE__).'templates/js/admin-ui.js');
+}
+
+function cxense_register_settings() {
+    register_setting('cxense-settings', CXENSE_API_KEY);
+    register_setting('cxense-settings', CXENSE_USER_NAME);
+    register_setting('cxense-settings', CXENSE_SITE_ID);
+    register_setting('cxense-settings', CXENSE_WIDGETS_OPTION);
+
+}
+
+add_action('admin_menu', 'cxense_menu');
+function cxense_menu(){
+    add_menu_page('Cxense - Inställningar', 'Cxense - Inställningar', 'manage_options', 'cxense-admin', 'cxense_settings_page');
+    add_action('admin_init', 'cxense_register_settings');
+}
+
+define ('CXENSE_API_KEY', 'cxense_api_key');
+define ('CXENSE_USER_NAME', 'cxense_user_name');
+define ('CXENSE_SITE_ID', 'cxense_site_id');
+define ('CXENSE_WIDGETS_OPTION', 'cxense_widgets_options');
