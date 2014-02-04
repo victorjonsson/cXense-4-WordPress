@@ -13,7 +13,7 @@ WordPress plugin that integrates your website with [cXense](http://www.cXense.co
 ## Installation
 
 1. Clone this project in the plugin directory of WordPress.
-2. Install the plugin in wp-admoin. 
+2. Install the plugin in wp-admin. 
 3. Let the plugin know your site id at cXense. You can do this either by setting a constant with the name `CXENSE_SITE_ID` in wp-config, or use the settings page for the plugin that can be found in wp-admin, below Settings.
 
 
