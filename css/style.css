@@ -1,0 +1,23 @@
+.cxense-item h1{
+    font-size: 14px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+    padding-top: 5px;
+}
+
+.cxenseWidget :first-child{
+    padding-top: 0px;
+}
+
+.cxenseWidget :last-child{
+    padding-bottom: 10px;
+}
+
+.cxense-item span{
+    color: gray;
+    font-size: 11px;
+}
+
+.cxense-item {
+    line-height: 15px;
+}
