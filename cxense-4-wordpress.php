@@ -3,7 +3,7 @@
 Plugin Name: cXense 4 WordPress
 Description: Integrates the website with cXense Analytics and cXense Site Search (require php v >= 5.3)
 Version: 1.0.2
-Author: Victor Jonsson <http://victorjonsson.se/>
+Author: Victor Jonsson <http://victorjonsson.se/>, Tom Brännström
 */
 
 // Define initial constants
