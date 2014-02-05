@@ -49,6 +49,10 @@ function cxense_output_meta_tags($location=null) {
     if ( is_singular() || is_single() ) {
         global $post;
 
+        $recs_tags = array(
+
+        );
+
         $og_tags = array(
             'og:title' => get_the_title(),
             'og:url' => apply_filters('cxense_og_url', get_permalink())
@@ -72,12 +76,12 @@ function cxense_output_meta_tags($location=null) {
             }
             if( has_post_thumbnail() ) {
                 list($src, $width, $height) = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'full' );
-                $og_tags['cXenseParse:recs:image'] = $src;
+                $recs_tags['cXenseParse:recs:image'] = $src;
                 if( $width > 200 && $height > 200 ) {
                     $og_tags['og:image'] = $src;
                 }
             } else {
-                $og_tags['cXenseParse:recs:image'] = 'noimage';
+                $recs_tags['cXenseParse:recs:image'] = 'noimage';
             }
 
             $is_recommendable = 'true';
@@ -87,26 +91,26 @@ function cxense_output_meta_tags($location=null) {
             $is_recommendable = 'false';
         }
 
-        $og_tags['cXenseParse:recs:recommendable'] = apply_filters('cxense_is_recommendable', $is_recommendable);
+        $recs_tags['cXenseParse:recs:recommendable'] = apply_filters('cxense_is_recommendable', $is_recommendable);
 
 
         // Paywall
         if( defined('PAYGATE_PLUGIN_URL') ) {
-            $og_tags['cXenseParse:paywall'] = is_paygate_protected($post) ? 'true':'false';
-            $og_tags['cXenseParse:recs:paywall'] = $og_tags['cXenseParse:paywall'];
-            if( $og_tags['cXenseParse:paywall'] == 'true' ) {
+            $recs_tags['cXenseParse:paywall'] = is_paygate_protected($post) ? 'true':'false';
+            $recs_tags['cXenseParse:recs:paywall'] = $og_tags['cXenseParse:paywall'];
+            if( $recs_tags['cXenseParse:paywall'] == 'true' ) {
                 // For content index search
-                $og_tags['cXenseParse:recs:custom0'] = 'paywall';
+                $recs_tags['cXenseParse:recs:custom0'] = 'paywall';
             }
         }
 
         // Post id
-        $og_tags['cXenseParse:recs:articleid'] = $post->ID;
+        $recs_tags['cXenseParse:recs:articleid'] = $post->ID;
 
     }
     else {
         // Tags/category/search etc....
-        $og_tags['cXenseParse:recs:recommendable'] = 'false';
+        $recs_tags['cXenseParse:recs:recommendable'] = 'false';
         $og_tags['og:url'] = get_site_url().$_SERVER['REQUEST_URI'];
         $og_tags['og:type'] = 'website';
     }
@@ -129,16 +133,19 @@ function cxense_output_meta_tags($location=null) {
 
     if( !empty($_GET['no-cxense-og']) ) {
         unset($og_tags['og:article:author']);
-        unset($og_tags['cXenseParse:recs:recommendable']);
-        unset($og_tags['cXenseParse:paywall']);
-        unset($og_tags['cXenseParse:recs:paywall']);
-        unset($og_tags['cXenseParse:recs:custom0']);
-        unset($og_tags['cXenseParse:recs:articleid']);
+        unset($recs_tags['cXenseParse:recs:recommendable']);
+        unset($recs_tags['cXenseParse:paywall']);
+        unset($recs_tags['cXenseParse:recs:paywall']);
+        unset($recs_tags['cXenseParse:recs:custom0']);
+        unset($recs_tags['cXenseParse:recs:articleid']);
         $og_tags['og:url'] = add_query_arg('no-cxense-og', '1', $og_tags['og:url']);
     }
 
     foreach($og_tags as $name => $val) {
         echo '<meta property="'.$name.'" content="'.$val.'" />'.PHP_EOL;
+    }
+    foreach($recs_tags as $name => $val) {
+        echo '<meta name="'.$name.'" content="'.$val.'" />'.PHP_EOL;
     }
 }
 
