@@ -97,7 +97,7 @@ function cxense_output_meta_tags($location=null) {
         // Paywall
         if( defined('PAYGATE_PLUGIN_URL') ) {
             $recs_tags['cXenseParse:paywall'] = is_paygate_protected($post) ? 'true':'false';
-            $recs_tags['cXenseParse:recs:paywall'] = $og_tags['cXenseParse:paywall'];
+            $recs_tags['cXenseParse:recs:paywall'] = $recs_tags['cXenseParse:paywall'];
             if( $recs_tags['cXenseParse:paywall'] == 'true' ) {
                 // For content index search
                 $recs_tags['cXenseParse:recs:custom0'] = 'paywall';
