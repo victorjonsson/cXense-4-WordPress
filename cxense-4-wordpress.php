@@ -67,15 +67,18 @@ if( is_admin() ) {
 
     add_action('template_redirect', function() {
 
-        // Add content profiling tags
-        // https://wiki.cxense.com/display/cust/Cxense+Content+-+Review+and+Refinement
-        if( cxense_get_opt('cxense_generate_og_tags') != 'no' ) {
-            add_action('wp_head', 'cxense_output_meta_tags');
-        }
+        if( !is_preview() ) {
 
-        // Add analytics script
-        if( cxense_get_opt('cxense_add_analytics_script') != 'no' ) {
-            add_action('wp_footer', 'cxense_analytics_script');
+            // Add content profiling tags
+            // https://wiki.cxense.com/display/cust/Cxense+Content+-+Review+and+Refinement
+            if( cxense_get_opt('cxense_generate_og_tags') != 'no' ) {
+                add_action('wp_head', 'cxense_output_meta_tags');
+            }
+
+            // Add analytics script
+            if( cxense_get_opt('cxense_add_analytics_script') != 'no' ) {
+                add_action('wp_footer', 'cxense_analytics_script');
+            }
         }
 
         // Add short code for ajax-search
