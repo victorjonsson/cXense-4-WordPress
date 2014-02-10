@@ -9,8 +9,9 @@ function cxense_ping_crawler($post_id) {
 
     if( !is_numeric($post_id) || (!wp_is_post_revision($post_id) && !wp_is_post_autosave($post_id)) ) {
 
-        if( !defined('CXENSE_USER_NAME') ) {
-            if( defined('WP_DEBUG') && WP_DEBUG )
+        $cx_user = cxense_get_opt('cxense_user_name');
+        if( !$cx_user ) {
+            if( WP_DEBUG )
                 error_log('PHP Warning: To use CXense push you must define constants CXENSE_USER_NAME and CXENSE_API_KEY');
             return null;
         }

@@ -1,14 +1,5 @@
 <?php
 
-/*
-Plugin Name: Cxense Widget
-Plugin URI: http://norran.se
-Description:
-Author: Norran
-Version: 0.1
-Author URI: webbutvecklare@norran.se
-*/
-
 class Cxense_Widget extends WP_Widget {
 
     public function __construct(){
