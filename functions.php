@@ -187,6 +187,57 @@ function cxense_get_opt($name) {
 }
 
 /**
+ * Do a search against cXense indexed pages. Will return false in case
+ * of an error or a json result if all is fine (will be cached)
+ * @param string $query
+ * @param array $args
+ * @return array|bool
+ */
+function cxense_search($query, $args) {
+    $default_args = array(
+        'columns' => 'title,description,body',
+        'count' => 10,
+        'pagination' => 0,
+        'sort' => 'timestamp:desc',
+        'cache_ttl' => HOUR_IN_SECONDS,
+        'site_id' => cxense_get_opt('cxense_site_id'),
+    );
+
+    $args = array_merge($default_args, $args);
+
+    $url = sprintf(
+        'http://sitesearch.cxense.com/api/search/%s?p_aq=query(%s:"%s",token-op=and)&p_c=%d&p_s=%d&p_sm=%s',
+        $args['site_id'],
+        $args['columns'],
+        urlencode($query),
+        $args['count'],
+        $args['pagination'],
+        $args['sort']
+    );
+
+    $cache_key = md5($url);
+    $result = get_transient($cache_key);
+
+    if( !$result ) {
+        $response = wp_remote_get($url);
+        if ( is_wp_error( $response ) ) {
+            $error_message = $response->get_error_message();
+            error_log('PHP Warning: Something went wrong trying to get cxense search data: '.$error_message, E_USER_WARNING);
+            return false;
+        } else {
+            $result = @json_decode($response['body'], true);
+            if( !$result ) {
+                error_log('PHP Warning: Unable to parse json from result ('.json_last_error().')', E_USER_WARNING);
+                return false;
+            }
+            set_transient($cache_key, $result, $args['cache_ttl']);
+        }
+    }
+
+    return $result;
+}
+
+/**
  * Get a list of all settings that this plugin has
  * @return array
  */
