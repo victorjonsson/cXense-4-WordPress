@@ -24,20 +24,6 @@ register_activation_hook(__FILE__, function() {
 // Remove all settings that might have been created when plugin gets uninstalled
 register_uninstall_hook(__FILE__, 'cxense_remove_all_settings');
 
-// Settings page for the plugin
-add_action('admin_menu', function() {
-    $js_hook = add_options_page(
-        'cXense',
-        'cXense',
-        'manage_options',
-        'cxense-settings',
-        function() {
-            require_once CXENSE_PLUGIN_PATH.'/templates/admin/settings-page.php';
-        }
-    );
-    wp_enqueue_script('admin-'.$js_hook, CXENSE_PLUGIN_URL.'templates/admin/admin-ui.js', array('jquery'), CXENSE_PLUGIN_VERSION);
-});
-
 // Load wp widget
 add_action('widgets_init', function () {
     require_once __DIR__.'/widget.php';
@@ -47,7 +33,23 @@ add_action('widgets_init', function () {
 
 if( is_admin() ) {
 
+
     /* * * * * Plugin admin stuff * * * */
+
+    
+    // Settings page for the plugin
+    add_action('admin_menu', function() {
+        $js_hook = add_options_page(
+            'cXense',
+            'cXense',
+            'manage_options',
+            'cxense-settings',
+            function() {
+                require_once CXENSE_PLUGIN_PATH.'/templates/admin/settings-page.php';
+            }
+        );
+        wp_enqueue_script('admin-'.$js_hook, CXENSE_PLUGIN_URL.'templates/admin/admin-ui.js', array('jquery'), CXENSE_PLUGIN_VERSION);
+    });
 
     add_action('admin_init', function() {
 
