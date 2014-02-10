@@ -50,18 +50,15 @@ function cxense_output_meta_tags($location=null) {
     if ( is_singular() || is_single() ) {
         global $post;
 
-        $recs_tags = array(
-
-        );
-
+        $recs_tags = array();
         $og_tags = array(
             'og:title' => get_the_title(),
             'og:url' => apply_filters('cxense_og_url', get_permalink())
         );
 
-        $recommendable_types = 'post';
-        if( defined('CXENSE_RECOMMENDABLE_POST_TYPES') ) {
-            $recommendable_types = CXENSE_RECOMMENDABLE_POST_TYPES;
+        $recommendable_types = cxense_get_opt('cxense_recommendable_post_type');
+        if( $recommendable_types ) {
+            $recommendable_types = 'post';
         }
         if( strpos($recommendable_types, $post->post_type) !== false ) {
             $og_tags['og:type'] = 'article';
@@ -130,16 +127,6 @@ function cxense_output_meta_tags($location=null) {
         if( !empty($og_tags[$tag]) ) {
             $og_tags[$tag] = trim(str_replace('"','&quot;', $val));
         }
-    }
-
-    if( !empty($_GET['no-cxense-og']) ) {
-        unset($og_tags['og:article:author']);
-        unset($recs_tags['cXenseParse:recs:recommendable']);
-        unset($recs_tags['cXenseParse:paywall']);
-        unset($recs_tags['cXenseParse:recs:paywall']);
-        unset($recs_tags['cXenseParse:recs:custom0']);
-        unset($recs_tags['cXenseParse:recs:articleid']);
-        $og_tags['og:url'] = add_query_arg('no-cxense-og', '1', $og_tags['og:url']);
     }
 
     foreach($og_tags as $name => $val) {
