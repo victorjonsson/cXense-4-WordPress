@@ -36,7 +36,7 @@ if( is_admin() ) {
 
     /* * * * * Plugin admin stuff * * * */
 
-    
+
     // Settings page for the plugin
     add_action('admin_menu', function() {
         $js_hook = add_options_page(
