@@ -29,7 +29,7 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
         cXUserParams = cXUserParams || {};
 
     cXCustomParams.type =  '<?php echo $type ?>';
-    cXCustomParams.paywall = '<?php echo $has_paygate_plugin && vkwp_is_post_closed() ? 'true':'false' ?>';
+    cXCustomParams.paywall = '<?php echo $has_paygate_plugin && is_paygate_protected() ? 'true':'false' ?>';
     cXenseSiteID = '<?php echo cxense_get_opt('cxense_site_id') ?>';
 
     cX.callQueue = cX.callQueue || [];
