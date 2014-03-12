@@ -74,6 +74,8 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
                 window.cXUserParams['subscriber'] = 'false';
             }
 
+            <?php do_action('cxense_js_init') ?>
+
             if( 'jQuery' in window ) {
                 jQuery(window).trigger('cXenseInit');
             }
