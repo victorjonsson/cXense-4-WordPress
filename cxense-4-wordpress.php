@@ -68,7 +68,7 @@ if( is_admin() ) {
 
     /* * * * * Manually triggering page view  * * * */
 
-    if( !empty($_GET['cxense-register-event']) && !empty($_GET['url']) ) {
+    if( !empty($_GET['cxense-register-event']) && !empty($_GET['path']) ) {
         require __DIR__.'/templates/cx-event.php';
         die;
     }

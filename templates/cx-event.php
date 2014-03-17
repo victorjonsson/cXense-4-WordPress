@@ -1,5 +1,6 @@
 <?php
-$url = isset($_GET['url']) ? '/'.ltrim(urldecode($_GET['url']), '/') : '/';
+$url = rtrim(get_bloginfo('home'), '/');
+$url .= isset($_GET['path']) ? '/'.ltrim(urldecode($_GET['path']), '/') : '/';
 $encode_param = function($name) {
     if( isset($_GET[$name]) && is_array($_GET[$name]) ) {
         return json_encode($_GET[$name]);

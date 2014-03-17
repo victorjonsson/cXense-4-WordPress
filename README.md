@@ -52,13 +52,13 @@ Use this constant if you want to define which post types that should be recommen
 After that the jQuery event `cXenseInit` you'll get access to the function `sendCxenseEvent` that can be used to
 trigger pageViews at cXense programmatically.
 
-`sendCxenseEvent(extraCustomParams, extraUserProfileParams, URL);`
+`sendCxenseEvent(extraCustomParams, extraUserProfileParams, path);`
 
 **[extraCustomParams]:Object** — If you want to add custom parameters
 
 **[extraUserProfileParams]:Object** — If you want to add user profile parameters
 
-**[URL]:String** — By defining this argument the pageview will be triggered for a made up URL. This URL will not contain
+**[path]:String** — By defining this argument the pageview will be triggered for a made up URL. This URL will not contain
 any content and therefor not affect the content profile nor user profile.
 
 

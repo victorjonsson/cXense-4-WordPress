@@ -82,15 +82,15 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
              * Method that can be used to trigger a cXense Page view event
              * @param [customParams]
              * @param [userProfileParams]
-             * @param [url]
+             * @param [path]
              */
-            window.sendCxenseEvent = function(customParams, userProfileParams, url) {
+            window.sendCxenseEvent = function(customParams, userProfileParams, path) {
                 customParams = customParams || {};
                 userProfileParams = userProfileParams || {};
 
-                if( url ) {
+                if( path ) {
                     // Load specified url
-                    var iframeHref = '<?php echo trim(bloginfo('home'), '/'); ?>/?cxense-register-event=1&amp;url='+escape(url)+'&amp;';
+                    var iframeHref = '<?php echo trim(bloginfo('home'), '/'); ?>/?cxense-register-event=1&amp;path='+escape(path)+'&amp;';
                     jQuery.each(customParams, function(key, val) {
                         iframeHref += 'customParam['+key+']='+val+'&amp;';
                         window.cXCustomParams[key] = val;
