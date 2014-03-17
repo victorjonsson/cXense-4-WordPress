@@ -49,8 +49,7 @@ Use this constant if you want to define which post types that should be recommen
 
 ## Registering page-views programmatically
 
-After that the jQuery event `cXenseInit` you'll get access to the function `sendCxenseEvent` that can be used to
-trigger pageViews at cXense programmatically.
+After that the jQuery event `cXenseInit` has triggered you'll get access to the function `sendCxenseEvent`. Use this function to trigger pageViews at cXense programmatically.
 
 `sendCxenseEvent(extraCustomParams, extraUserProfileParams, path);`
 
