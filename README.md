@@ -45,3 +45,27 @@ Use this constant if you want to define which post types that should be recommen
 *cxense_is_recommendable* — Whether or not current URL should be recommendable (strings 'true' or 'false'). Use this filter if you don't wont certain posts to be recommended by the recommendations widgets provided by cXense.
 
 *cxense_og_url* — Filters the current url that is used as og:url.
+
+
+## Registering page-views programmatically
+
+After that the jQuery event `cXenseInit` you'll get access to the function `sendCxenseEvent` that can be used to
+trigger pageViews at cXense programmatically.
+
+`sendCxenseEvent(extraCustomParams, extraUserProfileParams, URL);`
+
+**[extraCustomParams]:Object** — If you want to add custom parameters
+
+**[extraUserProfileParams]:Object** — If you want to add user profile parameters
+
+**[URL]:String** — By defining this argument the pageview will be triggered for a made up URL. This URL will not contain
+any content and therefor not affect the content profile nor user profile.
+
+
+```
+// Trigger a new page view for current page, with an extra custom parameter
+sendCxenseEvent({ajax: 'yes'});
+
+// Trigger a pageview for a made up page
+sendCxenseEvent({ajax: 'yes'}, {subscriber:'yes'}, '/subscriber_912_settings');
+```
