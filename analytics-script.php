@@ -30,13 +30,13 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
 
     cXCustomParams.type =  '<?php echo $type ?>';
     cXCustomParams.paywall = '<?php echo $has_paygate_plugin && is_paygate_protected() ? 'true':'false' ?>';
+    cXCustomParams.webView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) ? 'true':'false';
     cXenseSiteID = '<?php echo cxense_get_opt('cxense_site_id') ?>';
 
     cX.callQueue = cX.callQueue || [];
     cX.callQueue.push(['setSiteId', cXenseSiteID]);
     cX.callQueue.push(['setCustomParameters', cXCustomParams]);
     cX.callQueue.push(['setUserProfileParameters', cXUserParams]);
-    cX.callQueue.push(['sendPageViewEvent', { useAutorefreshCheck: false}]);
 
     var cXenseInit = function() {
 
@@ -70,6 +70,11 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
                         }
                     }
                 <?php endif; ?>
+
+                <?php if( $org_type = cxense_get_opt('cxense_org_prefix') ): ?>
+                    cX.callQueue.push(['addExternalId', {id: window.PayGateUser.id, type: '<?php echo $org_type ?>'}]);
+                <?php endif; ?>
+
             } else {
                 window.cXUserParams['subscriber'] = 'false';
             }
@@ -90,7 +95,7 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
 
                 if( path ) {
                     // Load specified url
-                    var iframeHref = '<?php echo trim(bloginfo('home'), '/'); ?>/?cxense-register-event=1&amp;path='+escape(path)+'&amp;';
+                    var iframeHref = '<?php echo trim(bloginfo('home'), '/'); ?>/cxense-event'+path+'?';
                     jQuery.each(customParams, function(key, val) {
                         iframeHref += 'customParam['+key+']='+val+'&amp;';
                         window.cXCustomParams[key] = val;
@@ -115,6 +120,9 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
                     cX.sendPageViewEvent();
                 }
             };
+
+            // Last but not least send the pageView event
+            cX.callQueue.push(['sendPageViewEvent', { useAutorefreshCheck: false}]);
 
             (function() { try { var scriptEl = document.createElement('script'); scriptEl.type = 'text/javascript'; scriptEl.async = 'async';
                 scriptEl.src = ('https:' == document.location.protocol) ? 'https://scdn.cxense.com/cx.js' : 'http://cdn.cxense.com/cx.js';
