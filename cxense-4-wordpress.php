@@ -9,7 +9,7 @@ Author: Victor Jonsson <http://victorjonsson.se/>, Tom Brännström
 // Define initial constants
 define('CXENSE_PLUGIN_URL', plugin_dir_url(__FILE__));
 define('CXENSE_PLUGIN_PATH', __DIR__);
-define('CXENSE_PLUGIN_VERSION', '1.0.2');
+define('CXENSE_PLUGIN_VERSION', '1.0.3');
 
 // Load the function library of the plugin
 require __DIR__.'/functions.php';
@@ -68,10 +68,13 @@ if( is_admin() ) {
 
     /* * * * * Manually triggering page view  * * * */
 
-    if( !empty($_GET['cxense-register-event']) && !empty($_GET['path']) ) {
-        require __DIR__.'/templates/cx-event.php';
-        die;
-    }
+    add_filter('request', function($req) {
+        if( strpos($_SERVER['REQUEST_URI'], '/cxense-event/') !== false )  {
+            require __DIR__.'/templates/cx-event.php';
+            die;
+        }
+        return $req;
+    });
 
 
     /* * * * * Plugin theme stuff * * * */

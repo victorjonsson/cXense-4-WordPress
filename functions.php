@@ -6,34 +6,7 @@
  * @return array|null
  */
 function cxense_ping_crawler($post_id) {
-
-    if( !is_numeric($post_id) || (!wp_is_post_revision($post_id) && !wp_is_post_autosave($post_id)) ) {
-
-        $cx_user = cxense_get_opt('cxense_user_name');
-        if( !$cx_user ) {
-            if( WP_DEBUG )
-                error_log('PHP Warning: To use CXense push you must define constants CXENSE_USER_NAME and CXENSE_API_KEY');
-            return null;
-        }
-
-        $date = date("o-m-d\TH:i:s.000O");
-        $signature = hash_hmac("sha256", $date, cxense_get_opt('cxense_api_key'));
-
-        $url = is_numeric($post_id) ? get_permalink($post_id) : $post_id;
-
-        $request_opts = array(
-            'method' => 'POST',
-            'body' => json_encode(array('url'=> $url)),
-            'headers' => array(
-                'X-cXense-Authentication' => 'username='.cxense_get_opt('cxense_user_name').' date='.$date.' hmac-sha256-hex='.$signature
-            )
-        );
-
-        $http = new WP_Http();
-        $response = $http->post('https://api.cxense.com/profile/content/push', $request_opts);
-        return $response;
-    }
-    return null;
+    return CxenseAPI::pingCrawler($post_id);
 }
 
 /**
@@ -60,7 +33,7 @@ function cxense_output_meta_tags($location=null) {
         if( !$recommendable_types ) {
             $recommendable_types = 'post';
         }
-        
+
         if( strpos($recommendable_types, $post->post_type) !== false ) {
             $og_tags['og:type'] = 'article';
             $og_tags['og:article:published_time'] = date('c', strtotime($post->post_date));
@@ -252,6 +225,7 @@ function cxense_get_settings() {
         array('name'=>'cxense_recommendable_post_types', 'title' => 'Recommendable post types (comma separated)'),
         array('name'=>'cxense_default_site_desc', 'title' => 'The default website description used in og:description'),
         array('name'=>'cxense_default_og_image', 'title' => 'URL to default og:image'),
+        array('name'=>'cxense_org_prefix', 'title' => 'Organisation prefix'),
         array('name'=>'cxense_user_products', 'title' => 'Paywall user products (comma separated string)'),
         array('name'=>'cxense_widgets_options', 'title' => 'cxense_widgets_options', 'add_field' => false)
     );
@@ -303,4 +277,47 @@ function cxense_register_settings() {
 function cxense_remove_all_settings() {
     foreach(cxense_get_settings() as $setting)
         delete_option($setting['name']);
+}
+
+
+class CxenseAPI {
+
+    /**
+     * @param string|int $post_id Either post ID or permalink
+     * @return array|null|object
+     */
+    static function pingCrawler($post_id)
+    {
+        if( !is_numeric($post_id) || (!wp_is_post_revision($post_id) && !wp_is_post_autosave($post_id)) ) {
+            $url = is_numeric($post_id) ? get_permalink($post_id) : $post_id;
+            return self::request('/profile/content/push', array('url'=> $url), 'POST');
+        }
+        return null;
+    }
+
+    static function request($path, $args, $method='GET')
+    {
+        $cx_user = cxense_get_opt('cxense_user_name');
+        if( !$cx_user ) {
+            if( WP_DEBUG )
+                error_log('PHP Warning: To use CXense push you must define constants CXENSE_USER_NAME and CXENSE_API_KEY');
+            return null;
+        }
+
+        $date = date("o-m-d\TH:i:s.000O");
+        $signature = hash_hmac("sha256", $date, cxense_get_opt('cxense_api_key'));
+
+        $request_opts = array(
+            'method' => $method,
+            'body' => json_encode($args),
+            'headers' => array(
+                'X-cXense-Authentication' => 'username='.cxense_get_opt('cxense_user_name').' date='.$date.' hmac-sha256-hex='.$signature
+            )
+        );
+
+        $http = new WP_Http();
+        $response = $http->post('https://api.cxense.com'.$path, $request_opts);
+        return $response;
+    }
+
 }
