@@ -29,7 +29,7 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
         cXUserParams = cXUserParams || {};
 
     cXCustomParams.type =  '<?php echo $type ?>';
-
+    cXCustomParams.paywall = '<?php echo $has_paygate_plugin && is_paygate_protected() ? 'true':'false' ?>';
     cXenseSiteID = '<?php echo cxense_get_opt('cxense_site_id') ?>';
 
     cX.callQueue = cX.callQueue || [];
@@ -74,9 +74,47 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
                 window.cXUserParams['subscriber'] = 'false';
             }
 
-            if( 'jQuery' in window ) {
-                jQuery(window).trigger('cXenseInit');
-            }
+            <?php do_action('cxense_js_init') ?>
+
+            jQuery(window).trigger('cXenseInit');
+
+            /**
+             * Method that can be used to trigger a cXense Page view event
+             * @param [customParams]
+             * @param [userProfileParams]
+             * @param [path]
+             */
+            window.sendCxenseEvent = function(customParams, userProfileParams, path) {
+                customParams = customParams || {};
+                userProfileParams = userProfileParams || {};
+
+                if( path ) {
+                    // Load specified url
+                    var iframeHref = '<?php echo trim(bloginfo('home'), '/'); ?>/?cxense-register-event=1&amp;path='+escape(path)+'&amp;';
+                    jQuery.each(customParams, function(key, val) {
+                        iframeHref += 'customParam['+key+']='+val+'&amp;';
+                        window.cXCustomParams[key] = val;
+                    });
+                    jQuery.each(userProfileParams, function(key, val) {
+                        iframeHref += 'userParam['+key+']='+val+'&amp;';
+                    });
+                    jQuery('<iframe height="1" width="1" style="visibility: hidden" href="'+iframeHref+'"></iframe>').appendTo('body');
+                } else {
+
+                    jQuery.each(customParams, function(key, val) {
+                        window.cXCustomParams[key] = val;
+                    });
+                    jQuery.each(userProfileParams, function(key, val) {
+                        window.cXUserParams[key] = val;
+                    });
+
+                    cX.initializePage();
+                    cX.setSiteId(window.cXenseSiteID);
+                    cX.setCustomParameters(window.cXCustomParams);
+                    cX.setUserProfileParameters(window.cXUserParams);
+                    cX.sendPageViewEvent();
+                }
+            };
 
             (function() { try { var scriptEl = document.createElement('script'); scriptEl.type = 'text/javascript'; scriptEl.async = 'async';
                 scriptEl.src = ('https:' == document.location.protocol) ? 'https://scdn.cxense.com/cx.js' : 'http://cdn.cxense.com/cx.js';
@@ -88,18 +126,6 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
         jQuery(window).bind('paygateLoaded', cXenseInit);
     } else {
         cXenseInit();
-    }
-
-    // Page swipe event (can be used to trigger page view via AJAX)
-    if( 'jQuery' in window ) {
-        jQuery(window).bind('pageSwipe', function() {
-            window.cXCustomParams['swipe'] = 'true';
-            cX.initializePage();
-            cX.setSiteId(window.cXenseSiteID);
-            cX.setCustomParameters(window.cXCustomParams);
-            cX.setUserProfileParameters(window.cXUserParams);
-            cX.sendPageViewEvent();
-        });
     }
 
 </script><?php

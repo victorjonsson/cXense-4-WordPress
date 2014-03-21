@@ -65,6 +65,15 @@ if( is_admin() ) {
 
 } else {
 
+
+    /* * * * * Manually triggering page view  * * * */
+
+    if( !empty($_GET['cxense-register-event']) && !empty($_GET['path']) ) {
+        require __DIR__.'/templates/cx-event.php';
+        die;
+    }
+
+
     /* * * * * Plugin theme stuff * * * */
 
     add_action('template_redirect', function() {
@@ -82,6 +91,9 @@ if( is_admin() ) {
                 add_action('wp_footer', 'cxense_analytics_script');
             }
         }
+
+        // the analytics script requires jQuery
+        wp_enqueue_script('jquery');
 
         // Add short code for ajax-search
         require __DIR__.'/ajax-search/ajax-search-shortcode.php';

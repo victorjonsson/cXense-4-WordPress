@@ -57,9 +57,10 @@ function cxense_output_meta_tags($location=null) {
         );
 
         $recommendable_types = cxense_get_opt('cxense_recommendable_post_type');
-        if( $recommendable_types ) {
+        if( !$recommendable_types ) {
             $recommendable_types = 'post';
         }
+        
         if( strpos($recommendable_types, $post->post_type) !== false ) {
             $og_tags['og:type'] = 'article';
             $og_tags['og:article:published_time'] = date('c', strtotime($post->post_date));
