@@ -4,7 +4,7 @@ if(isset($_POST['searchTerm']) && isset($_POST['selected']) && isset($_POST['sor
     require_once '../../../../wp-load.php';
 
     $display_image = false;
-    $pagination = !empty($_POST['pagination']) ? 0 : $_POST['pagination'];
+    $pagination = isset($_POST['pagination']) ? $_POST['pagination'] : 0;
     $search_args = array(
         'columns' => $_POST['selected'],
         'count' => $_POST['count'],
