@@ -6,9 +6,16 @@ function cxense_output_ajax_search() {
     _log(CXENSE_PLUGIN_URL.'ajax-search/search.js');
     $data = array('post_url' => plugin_dir_url(__FILE__).'api.php');
     wp_localize_script('cxense-ajax-search', 'cxense_data', $data);
+    $value = isset($_GET['q']) ? $_GET['q'] : '';
+    if($value != ''){
+        ?> <script type="application/javascript"> jQuery(document).ready(function(){
+                cxenseSearch();
+            })</script>
+        <?
+    }
     ?>
     <div class="search-wrapper">
-        <input type="text" placeholder="Sök..." name="search_term" id="search-term">
+        <input type="text" placeholder="Sök..." name="search_term" id="search-term" value="<?=$value?>">
         <input type="button" class="btn btn--dark" onclick="cxenseSearch();" value="Sök">
         <input type="button" class="btn btn--dark search-settings" onclick="toggleAdvanced();" value="Inställningar">
     </div>
