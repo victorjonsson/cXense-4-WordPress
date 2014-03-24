@@ -3,7 +3,6 @@
 
 function cxense_output_ajax_search() {
     wp_enqueue_script('cxense-ajax-search', CXENSE_PLUGIN_URL.'ajax-search/search.js', array('jquery'), CXENSE_PLUGIN_VERSION);
-    _log(CXENSE_PLUGIN_URL.'ajax-search/search.js');
     $data = array('post_url' => plugin_dir_url(__FILE__).'api.php');
     wp_localize_script('cxense-ajax-search', 'cxense_data', $data);
     ?>
