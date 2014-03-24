@@ -6,10 +6,11 @@ $encode_param = function($name) {
         return '{}';
     }
 };
+$cx_event = 'Event: '. str_replace('/cxense-event/', '', strip_tags(current(explode('?', $_SERVER['REQUEST_URI']))));
 ?><html>
 <head>
-    <title><?php echo strip_tags(current(explode('?', $_SERVER['REQUEST_URI']))) ?></title>
-    <meta name="robots" content="noindex,nofollow" />
+    <title><?php echo $cx_event ?></title>
+    <?php cxense_output_meta_tags(null, 'cXense Event', $cx_event, $cx_event) ?>
 </head>
 <body>
     <script>

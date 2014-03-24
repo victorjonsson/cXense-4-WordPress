@@ -12,12 +12,15 @@ function cxense_ping_crawler($post_id) {
 /**
  * Output content profiling meta tags (open-graph and cXenseParse)
  * @param string|null $location Override current URL
+ * @param bool|string $site_name
+ * @param bool|string $desc
+ * @param bool|string $title
  */
-function cxense_output_meta_tags($location=null) {
+function cxense_output_meta_tags($location=null, $site_name=false, $desc=false, $title=false) {
 
     $og_tags = array(
-        'og:site_name' => str_replace( 'http://', '',  get_site_url() ),
-        'og:description' => cxense_get_opt('CXENSE_DEFAULT_SITE_DESC')
+        'og:site_name' => empty($site_name) ? str_replace( 'http://', '',  get_site_url() ) : $site_name,
+        'og:description' => empty($desc) ? cxense_get_opt('CXENSE_DEFAULT_SITE_DESC') : $desc
     );
 
     if ( is_singular() || is_single() ) {
@@ -94,6 +97,10 @@ function cxense_output_meta_tags($location=null) {
 
     if( !empty($location) ) {
         $og_tags['og:url'] = $location;
+    }
+
+    if( !empty($title) ) {
+        $og_tags['og:title'] = $title;
     }
 
     // Sanitize stuff
