@@ -43,18 +43,7 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
         window.cXCustomParams['subscriber'] = window.PayGateUser && window.PayGateUser.hasWebAccess() ? 'true':'false';
 
         var isBehindPaygate = <?php echo $has_paygate_plugin && is_behind_paygate() ? 'true':'false' ?>,
-            isSharedPaygate = isBehindPaygate && window.cXCustomParams['subscriber'] == 'false',
-            arrayContains = function(arr, val) {
-                if( typeof arr.indexOf == 'function' ) {
-                    return arr.indexOf(val) > -1;
-                } else {
-                    for(var i=0; i < arr.length; i++) {
-                        if( arr[i] == val )
-                            return true;
-                    }
-                }
-                return false;
-            };
+            isSharedPaygate = isBehindPaygate && window.cXCustomParams['subscriber'] == 'false'
 
         if( !isBehindPaygate || isSharedPaygate || window.cXCustomParams['subscriber'] == 'true' ) {
 
@@ -62,13 +51,12 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
                 window.cXUserParams['subscriber'] = 'true';
                 <?php if( !empty($userProducts) ): ?>
                     var userProducts = <?php echo json_encode($userProducts) ?>;
-                    for(var i=0; i<window.PayGateUser.products.length; i++ ) {
-                        var prod = window.PayGateUser.products[i];
-                        if( arrayContains(userProducts, window.PayGateUser.products[i]) ) {
+                    jQuery.each(userProducts, function(i, prod) {
+                        if( window.PayGateUser.hasProduct(prod) ) {
                             window.cXUserParams['product'] = prod;
-                            break;
+                            return false;
                         }
-                    }
+                    });
                 <?php endif; ?>
 
                 <?php if( $org_type = cxense_get_opt('cxense_org_prefix') ): ?>
@@ -103,7 +91,7 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
                     jQuery.each(userProfileParams, function(key, val) {
                         iframeHref += 'userParam['+key+']='+val+'&amp;';
                     });
-                    jQuery('<iframe height="1" width="1" style="visibility: hidden" href="'+iframeHref+'"></iframe>').appendTo('body');
+                    jQuery('<iframe height="1" width="1" style="visibility: hidden" src="'+iframeHref+'"></iframe>').appendTo('body');
                 } else {
 
                     jQuery.each(customParams, function(key, val) {
