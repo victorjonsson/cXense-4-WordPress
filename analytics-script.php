@@ -32,11 +32,8 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
     cXCustomParams.paywall = '<?php echo $has_paygate_plugin && is_paygate_protected() ? 'true':'false' ?>';
     cXCustomParams.webView = /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(navigator.userAgent) ? 'true':'false';
     cXenseSiteID = '<?php echo cxense_get_opt('cxense_site_id') ?>';
-
     cX.callQueue = cX.callQueue || [];
-    cX.callQueue.push(['setSiteId', cXenseSiteID]);
-    cX.callQueue.push(['setCustomParameters', cXCustomParams]);
-    cX.callQueue.push(['setUserProfileParameters', cXUserParams]);
+
 
     var cXenseInit = function() {
 
@@ -44,6 +41,13 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
 
         var isBehindPaygate = <?php echo $has_paygate_plugin && is_behind_paygate() ? 'true':'false' ?>,
             isSharedPaygate = isBehindPaygate && window.cXCustomParams['subscriber'] == 'false'
+
+        if( window.userGender ) {
+            window.cXCustomParams['gender'] = window.userGender;
+        }
+        if( window.userAgeGroup ) {
+            window.cXCustomParams['ageGroup'] = window.userAgeGroup;
+        }
 
         if( !isBehindPaygate || isSharedPaygate || window.cXCustomParams['subscriber'] == 'true' ) {
 
@@ -109,7 +113,9 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
                 }
             };
 
-            // Last but not least send the pageView event
+            cX.callQueue.push(['setSiteId', cXenseSiteID]);
+            cX.callQueue.push(['setCustomParameters', cXCustomParams]);
+            cX.callQueue.push(['setUserProfileParameters', cXUserParams]);
             cX.callQueue.push(['sendPageViewEvent', { useAutorefreshCheck: false}]);
 
             (function() { try { var scriptEl = document.createElement('script'); scriptEl.type = 'text/javascript'; scriptEl.async = 'async';
