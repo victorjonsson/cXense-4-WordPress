@@ -40,7 +40,7 @@ class Cxense_Widget extends WP_Widget {
          * @var string $before_title
          * @var string $after_title
          */
-
+        //Uncomment this if you want to enqueue a style for your widget.
         //wp_enqueue_style('cxense_style',plugin_dir_url(__FILE__)."css/style.css");
         extract($args);
         $title = isset($instance['widget_title']) ? $instance['widget_title'] : '';
