@@ -21,20 +21,20 @@ if(isset($_POST['searchTerm']) && isset($_POST['selected']) && isset($_POST['sor
     }
 
     if($pagination > 1){
-        $returnpage = '<a href="#" onclick="cxenseSearch('.($pagination -$_POST['count']).')">Föregående sida</a> |';
+        $returnpage = '<a class="prev" href="#" onclick="cxenseSearch('.($pagination -$_POST['count']).')">Föregående sida</a>';
     } else {
         $returnpage = '';
     }
 
     if($totalscope < $total_matched){
-        $nextpage = '<a href="#" onclick="cxenseSearch('.$totalscope.')">Nästa sida</a>';
+        $nextpage = '<a class="next" href="#" onclick="cxenseSearch('.$totalscope.')">Nästa sida</a>';
     } else {
         $nextpage = '';
     }
 
-    $html = '<div id="search-result">'.$pagination.'- '.$totalscope.' av <strong>'.$total_matched.'</strong> sökträffar ( tips, använd inställningar för att förfina det du söker efter )</div>';
+    $html = '<div class="search-results__info">'.$pagination.'- '.$totalscope.' av <strong>'.$total_matched.'</strong> sökträffar ( tips, använd inställningar för att förfina det du söker efter )</div>';
 
-    $html .= '<div>'.$returnpage.$nextpage.'</div>';
+    $html .= '<div class="search__pager">'.$returnpage.$nextpage.'</div>';
 
     foreach ($result['matches'] as $match){
         $href = isset($match['document']['fields']['link-canonical']) ? $match['document']['fields']['link-canonical'] : '';
@@ -48,25 +48,13 @@ if(isset($_POST['searchTerm']) && isset($_POST['selected']) && isset($_POST['sor
         } else {
             $show_image = '';
         }
-        $html .= '<div class="search-result" style="display:flex">
+        $html .= '<article class="search-results__item">
                     '.$show_image.'
-                    <div class="search-content">
-                        <table>
-                            <tr>
-                                <td><a href="'.$href.'">'.$title.'</a></td>
-                            </tr>
-                            <tr>
-                                <td><span class="search-description">'.$description.'</span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="search-body">'.$body.'</span></td>
-                            </tr>
-                            <tr>
-                                <td><span class="search-pubdate">'.$date.'</span></td>
-                            </tr>
-                        </table>
-                    </div>
-                 </div>';
+                        <span class="date">'.$date.'</span>
+                        <h2><a href="'.$href.'">'.$title.'</a></h2>
+                        <p class="excerpt">'.$description.'</p>
+                        <div class="body">'.$body.'</div>
+                 </article>';
     }
     echo $html;
 
