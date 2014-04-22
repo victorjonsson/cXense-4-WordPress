@@ -1,7 +1,6 @@
-// moved this to norran.js
-//function toggleAdvanced(){
-//    jQuery('.js-search-settings').toggle();
-//}
+function toggleAdvanced(){
+    jQuery('.js-search-settings').toggle();
+}
 
 function cxenseSearch(pagination){
     var sort = jQuery('input[name=sort]:checked').val();
