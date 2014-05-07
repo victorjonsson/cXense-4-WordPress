@@ -321,22 +321,26 @@ class CxenseAPI {
      * @param int $timeout Seconds until timeout
      * @return array|null|object
      */
-    static function request($path, $args, $timeout=5)
+    static function request($path, $args, $timeout=5, $user=null, $api_key = null)
     {
-        $cx_user = cxense_get_opt('cxense_user_name');
-        if( !$cx_user ) {
-            throw new Exception('You must define constants CXENSE_USER_NAME and CXENSE_API_KEY', self::EXCEPTION_USER_NOT_DEFINED);
+        if( !$user ) {
+            $user = cxense_get_opt('cxense_user_name');
+            if( !$user ) {
+                throw new Exception('You must define constants CXENSE_USER_NAME and CXENSE_API_KEY', self::EXCEPTION_USER_NOT_DEFINED);
+            }
         }
+        if( !$api_key )
+            $api_key = cxense_get_opt('cxense_api_key');
 
         $date = date("o-m-d\TH:i:s.000O");
-        $signature = hash_hmac("sha256", $date, cxense_get_opt('cxense_api_key'));
+        $signature = hash_hmac("sha256", $date, $api_key);
 
         $request_opts = array(
             'method' => 'POST', // the api seems only to allow POST?
             'body' =>  is_array($args) ? json_encode($args):$args,
             'timeout' => $timeout,
             'headers' => array(
-                'X-cXense-Authentication' => 'username='.cxense_get_opt('cxense_user_name').' date='.$date.' hmac-sha256-hex='.$signature
+                'X-cXense-Authentication' => 'username='.$user.' date='.$date.' hmac-sha256-hex='.$signature
             )
         );
 
