@@ -40,35 +40,35 @@ class Cxense_Widget extends WP_Widget {
          * @var string $before_title
          * @var string $after_title
          */
-
-        wp_enqueue_style('cxense_style',plugin_dir_url(__FILE__)."css/style.css");
+        //Uncomment this if you want to enqueue a style for your widget.
+        //wp_enqueue_style('cxense_style',plugin_dir_url(__FILE__)."css/style.css");
         extract($args);
         $title = isset($instance['widget_title']) ? $instance['widget_title'] : '';
 
-        echo $before_widget . $before_title . $title . $after_title;
         ?>
-        <div class="widget-body">
-            <div id="cxenseWidget">
-                <?
 
-                $data = json_decode($this->getCxenseContent(isset($instance['widget_id']) ? $instance['widget_id'] : ''),true);
+        <ul class="nav nav--stacked" id="cxenseWidget">
+            <?
+            $data = json_decode($this->getCxenseContent(isset($instance['widget_id']) ? $instance['widget_id'] : ''),true);
 
-                foreach ($data['items'] as $item) {
-                   ?>
-                    <div class="cxense-item">
-                        <a href="<?= isset($item['click_url']) ? $item['click_url'] : '' ?>">
-                            <h1><?= isset($item['title']) ? $item['title'] : '' ?></h1>
-                            <span><?= isset($item['description']) ? $item['description'] : ''?></span>
-                        </a>
-                    </div>
-                   <?
-                }
-
+            foreach ($data['items'] as $item) {
                 ?>
-            </div>
-        </div>
+                <li>
+                    <article class="article-promo article-promo--separator soft--bottom">
+                    <a href="<?= isset($item['click_url']) ? $item['click_url'] : '' ?>">
+                        <div class="media__body">
+                            <h4 class="article-promo__title"><?= isset($item['title']) ? $item['title'] : '' ?></h4>
+                            <span><?= isset($item['description']) ? $item['description'] : ''?></span>
+                        </div>
+                    </a>
+                    </article>
+                </li>
+                <?
+            }
+            ?>
+        </ul>
+
         <?
-        echo $after_widget;
     }
 
     private function getCxenseContent($widgetID){

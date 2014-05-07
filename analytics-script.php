@@ -87,7 +87,7 @@ foreach(explode(',', cxense_get_opt('cxense_user_products')) as $prod) {
 
                 if( path ) {
                     // Load specified url
-                    var iframeHref = '<?php echo trim(bloginfo('home'), '/'); ?>/cxense-event'+path+'?';
+                    var iframeHref = '<?php echo trim(bloginfo('url'), '/'); ?>/cxense-event'+path+'?';
                     jQuery.each(customParams, function(key, val) {
                         iframeHref += 'customParam['+key+']='+val+'&amp;';
                         window.cXCustomParams[key] = val;
