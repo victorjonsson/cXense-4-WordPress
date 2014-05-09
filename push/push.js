@@ -16,8 +16,6 @@ var fs = require('fs'),
     urlQueue = [],
     readline = require('readline'),
     timeoutErrorCode = 99001,
-    onGoingRequests = 0,
-    onGoingRequestsLimit = 200,
     cXenseAuthStr = null,
     pingcXense = function(URL, callback, errorCallback) {
 
@@ -32,13 +30,18 @@ var fs = require('fs'),
                 headers : {
                     'X-cXense-Authentication' : cXenseAuthStr,
                     'Content-Length' : Buffer.byteLength(sendBody, 'utf8')
-                },
-                timeout : 10000
+                }
             }, function(res) {
 
             var collectedBody = '';
             res.on('data', function (body) {
                 collectedBody += body;
+            });
+            res.on('error', function(e) {
+                errorCallback('response error', URL);
+            });
+            res.on('abort', function(e) {
+                errorCallback('abort', URL);
             });
             res.on('end', function() {
                 callback(collectedBody, res.statusCode, URL);
@@ -48,13 +51,11 @@ var fs = require('fs'),
         req.on('error', function(e) {
             errorCallback(e, URL);
         });
-        if(req.connection != undefined) {
-            req.connection.setTimeout(options.timeout, function() {
-                var error = new Error('Time out');
-                error.code = timeoutErrorCode;
-                errorCallback(error, URL);
-            });
-        }
+        req.setTimeout(1000, function() {
+            var error = new Error('Time out');
+            error.code = timeoutErrorCode;
+            errorCallback(error, URL);
+        });
         req.write(sendBody);
         req.end();
     },
@@ -66,6 +67,8 @@ var fs = require('fs'),
     out = function(str) {
         console.log(str);
     };
+
+https.globalAgent.maxSockets = 50; // may need to modify this to suite your computers setup and resources
 
 /*
  * Create authencation string
@@ -95,42 +98,54 @@ rd.on('close', function() {
      */
     out('- ' +urlQueue.length+ ' URL:s loaded into memory');
 
+    var numUrls = urlQueue.length,
+        numPushes = 0,
+        pushesLeft = function() {
+            return numUrls - numPushes;
+        },
+        percentLeft = function() {
+            return Math.round( (pushesLeft() / numUrls) * 1000 ) / 10;
+        };
+
+
     var sendInterval = setInterval(function() {
 
         for( var i=0; i < 50; i++ ) {
-            if( onGoingRequests > onGoingRequestsLimit ) {
-                // To many simultaneous requests, pls wait a while...
-                break;
-            }
-            else if( urlQueue.length == 0 ) {
+
+            if( urlQueue.length == 0 ) {
                 clearInterval(sendInterval);
             }
             else {
 
-                onGoingRequests++;
-
                 var onError = function(err, url, putBackInQueue) {
-                        onGoingRequests--;
-                        out('*** :( Failed pushing '+url.trim()+' due to '+err.message);
+                        out('*** :( Failed pushing '+url.trim()+' due to '+err.message+' ('+pushesLeft()+' - '+percentLeft()+'% pushes left)');
                         if( putBackInQueue !== false ) {
+                            // Put url back in queue
                             urlQueue.push(url);
+                        } else {
+                            numPushes++;
                         }
                     },
                     onSuccess = function(body, status, url) {
 
                         if( status == 200 ) {
-                            onGoingRequests--;
-                            out('* Pushed '+url+' successfully');
+                            out('* Pushed '+url+' successfully ('+pushesLeft()+' - '+percentLeft()+'% pushes left)');
+                            numPushes++;
                         } else {
                             onError(new Error('Server returned status '+status+' (body: '+body+')'), url, false);
                         }
                     },
 
-                    // take one url out of the queue
-                    url = urlQueue.splice(0, 1)[0];
+                // take one url out of the queue
+                url = urlQueue.splice(0, 1)[0];
 
                 // ping cxense
                 pingcXense(url, onSuccess, onError);
+
+                if( urlQueue.length == 0 ) {
+                    clearInterval(sendInterval);
+                    break;
+                }
             }
         }
 
