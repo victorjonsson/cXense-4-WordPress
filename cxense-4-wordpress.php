@@ -22,9 +22,6 @@ register_activation_hook(__FILE__, function() {
     }
 });
 
-// Remove all settings that might have been created when plugin gets uninstalled
-register_uninstall_hook(__FILE__, 'cxense_remove_all_settings');
-
 // Load wp widget
 add_action('widgets_init', function () {
     require_once __DIR__.'/widget.php';
@@ -33,6 +30,9 @@ add_action('widgets_init', function () {
 
 
 if( is_admin() ) {
+
+    // Remove all settings that might have been created when plugin gets uninstalled
+    register_uninstall_hook(__FILE__, 'cxense_remove_all_settings');
 
 
     /* * * * * Plugin admin stuff * * * */
