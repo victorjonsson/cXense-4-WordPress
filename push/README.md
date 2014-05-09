@@ -11,7 +11,7 @@ at cXense (https://wiki.cxense.com/pages/viewpage.action?pageId=18843212).
 
 ## Usage
 
-#### Extract URL:s from WordPress
+### Extract URL:s from WordPress
 
 Navigate to this directory in your console and run any of the commands below. The extracted URL:s will be
 written to a file name *urls.json* in the same directory. Each URL will be separated with a new line.
@@ -24,7 +24,7 @@ this script several times will not create duplications of the extracted URL:s.
 `$ php export.php livsstil` Extracts all URL:s of posts related to the category "livsstil"
 
 
-#### Ping cXense crawler (push.js)
+### Ping cXense crawler (push.js)
 
 This node-script will parse a file named "urls.json" that should be located in the same directory and contain URL:s separated with a new line.
 You can either create this file manually yourself or generate it with extract script described above.
