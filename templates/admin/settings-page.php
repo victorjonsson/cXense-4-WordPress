@@ -38,4 +38,10 @@
         <?php submit_button(); ?>
 
     </form>
+    <div id="icon-options-general" class="icon32"><br/></div>
+    <h2>Site push</h2>
+
+    <input class="button-secondary" type="button" onclick="CxensePush.data()" value="Pusha all data">
+    <span>Se php error log för feedback</span>
+
 </div>

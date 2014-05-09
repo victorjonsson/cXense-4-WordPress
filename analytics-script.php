@@ -3,6 +3,7 @@
 // Do we have the paygate plugin installed?
 $has_paygate_plugin = defined('PAYGATE_PLUGIN_URL');
 
+
 // Determine which type of request that is being made
 $type = 'other';
 if( is_single() ) {

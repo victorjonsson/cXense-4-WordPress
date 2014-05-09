@@ -13,6 +13,7 @@ define('CXENSE_PLUGIN_VERSION', '1.0.3');
 
 // Load the function library of the plugin
 require __DIR__.'/functions.php';
+require __DIR__.'/class-api.php';
 
 // Add recommendable post types when activated
 register_activation_hook(__FILE__, function() {
@@ -49,6 +50,10 @@ if( is_admin() ) {
             }
         );
         wp_enqueue_script('admin-'.$js_hook, CXENSE_PLUGIN_URL.'templates/admin/admin-ui.js', array('jquery'), CXENSE_PLUGIN_VERSION);
+        wp_enqueue_script('cxense-data-push', CXENSE_PLUGIN_URL.'templates/admin/data-push.js', array('jquery'), CXENSE_PLUGIN_VERSION);
+        $data = array('post_url' => CXENSE_PLUGIN_URL.'templates/admin/data-push.php');
+        wp_localize_script('cxense-data-push', 'cxense', $data);
+        require __DIR__.'/templates/admin/data-push.php';
     });
 
     add_action('admin_init', function() {

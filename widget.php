@@ -54,7 +54,7 @@ class Cxense_Widget extends WP_Widget {
             foreach ($data['items'] as $item) {
                 ?>
                 <li>
-                    <article class="article-promo article-promo--separator soft--bottom">
+                    <article class="article-promo article-promo--separator push--bottom soft--bottom">
                     <a href="<?= isset($item['click_url']) ? $item['click_url'] : '' ?>">
                         <div class="media__body">
                             <h4 class="article-promo__title"><?= isset($item['title']) ? $item['title'] : '' ?></h4>
