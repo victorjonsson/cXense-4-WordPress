@@ -14,7 +14,7 @@ at cXense (https://wiki.cxense.com/pages/viewpage.action?pageId=18843212).
 ### Extract URL:s from WordPress
 
 Navigate to this directory in your console and run any of the commands below. The extracted URL:s will be
-written to a file name *urls.json* in the same directory. Each URL will be separated with a new line.
+written to a file named *urls.json* in the same directory. Each URL will be separated with a new line.
 
 This script will extract 500 posts per second (to reduce allocated resources) until all URL:s is extracted. Running
 this script several times will not create duplications of the extracted URL:s.
