@@ -1,4 +1,5 @@
 <?php
+
 class CxenseAPI {
 
     const EXCEPTION_USER_NOT_DEFINED = 0;
@@ -72,16 +73,4 @@ class CxenseAPI {
             throw new Exception('Unexpected response, code: '.$resp['response']['code'].' message: '.$resp['response']['message'], -1);
         return json_decode($resp['body']);
     }
-
-    static function getPosts(){
-        global $wpdb;
-        $query=    "SELECT ID FROM $wpdb->posts";
-        $fivesdrafts = $wpdb->get_results($query);
-        $return = '';
-        foreach ( $fivesdrafts as $post_item){
-            $return .= $post_item->ID.',';
-        }
-        return $return;
-    }
-
 }
