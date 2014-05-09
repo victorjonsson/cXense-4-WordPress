@@ -48,7 +48,7 @@ $export_file = __DIR__.'/urls.txt';
 $extracted_urls = file_exists($export_file) ? explode('\n', file_get_contents($export_file)) : array();
 array_flip($extracted_urls); // has entries as keys to prevent duplication when running script several times
 $offset = 0;
-$limit = 100;
+$limit = 500;
 
 _p('----> About to extract URLs '.( $cat_id ? 'from category '.$cat_id:''));
 

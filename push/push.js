@@ -12,12 +12,12 @@ var fs = require('fs'),
     https = require('https'),
     crypto = require('crypto'),
     querystring = require('querystring'),
-    urlFile = __dirname+'/urlQueue.txt',
+    urlFile = __dirname+'/urls.txt',
     urlQueue = [],
     readline = require('readline'),
     timeoutErrorCode = 99001,
     onGoingRequests = 0,
-    onGoingRequestsLimit = 50,
+    onGoingRequestsLimit = 200,
     cXenseAuthStr = null,
     pingcXense = function(URL, callback, errorCallback) {
 
@@ -104,22 +104,26 @@ rd.on('close', function() {
             }
             else if( urlQueue.length == 0 ) {
                 clearInterval(sendInterval);
-                out('---> All URL:s are now sent');
             }
             else {
 
                 onGoingRequests++;
 
-                var onSuccess = function(body, status, url) {
+                var onError = function(err, url, putBackInQueue) {
                         onGoingRequests--;
-                        if( status == 200 ) {
-                            out('* Pushed '+url+' successfully');
-                        } else {
-                            out('*** :( Failed pushing '+url+' ... returned status '+status+' body: '+body);
+                        out('*** :( Failed pushing '+url.trim()+' due to '+err.message);
+                        if( putBackInQueue !== false ) {
+                            urlQueue.push(url);
                         }
                     },
-                    onError = function(err, url) {
-                        onGoingRequests--;
+                    onSuccess = function(body, status, url) {
+
+                        if( status == 200 ) {
+                            onGoingRequests--;
+                            out('* Pushed '+url+' successfully');
+                        } else {
+                            onError(new Error('Server returned status '+status+' (body: '+body+')'), url, false);
+                        }
                     },
 
                     // take one url out of the queue
