@@ -1,6 +1,6 @@
 <?php
 /**
- * File used to export URL:s to WordPress posts and saves them to file urls.json
+ * File used to export URL:s to WordPress posts and saves them to file urls.txt
  *
  * Usage:
  *  $ php ./export.php sport    # extract all urls from category "sport"
@@ -44,7 +44,7 @@ if( basename($cat_name) != 'export.php' ) {
     }
 }
 
-$export_file = __DIR__.'/urls.json';
+$export_file = __DIR__.'/urls.txt';
 $extracted_urls = file_exists($export_file) ? explode('\n', file_get_contents($export_file)) : array();
 array_flip($extracted_urls); // has entries as keys to prevent duplication when running script several times
 $offset = 0;

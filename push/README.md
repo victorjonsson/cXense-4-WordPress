@@ -14,22 +14,22 @@ at cXense (https://wiki.cxense.com/pages/viewpage.action?pageId=18843212).
 ### Extract URL:s from WordPress
 
 Navigate to this directory in your console and run any of the commands below. The extracted URL:s will be
-written to a file named *urls.json* in the same directory. Each URL will be separated with a new line.
+written to a file named *urls.txt* in the same directory. Each URL will be separated with a new line.
 
 This script will extract 500 posts per second (to reduce allocated resources) until all URL:s is extracted. Running
 this script several times will not create duplications of the extracted URL:s.
 
-`$ php export.php` Extracts all URL:s to *urls.json* separated with a new line
+`$ php export.php` Extracts all URL:s to *urls.txt* separated with a new line
 
 `$ php export.php livsstil` Extracts all URL:s of posts related to the category "livsstil"
 
 
 ### Ping cXense crawler (push.js)
 
-This node-script will parse a file named "urls.json" that should be located in the same directory and contain URL:s separated with a new line.
+This node-script will parse a file named "urls.txt" that should be located in the same directory and contain URL:s separated with a new line.
 You can either create this file manually yourself or generate it with extract script described above.
 
-**urls.json**
+**urls.txt**
 
 ```
 http://mywebsite.com/23932/an-url-of-some-sort
@@ -40,9 +40,9 @@ http://mywebsite.com/1990/another-url-of-some-sort
 **Running the script**
 
 ```
-$ node push.js
+$ node push.js api.user@website.com api-key
 
-- Parsing urls.json
+- Parsing urls.txt
 - 13291 URL:s loaded into memory
 * Pushed http://mywebsite.com/23932/an-url-of-some-sort successfully
 * Pushed http://mywebsite.com/1990/another-url-of-some-sort successfully
