@@ -6,7 +6,7 @@ at cXense (https://wiki.cxense.com/pages/viewpage.action?pageId=18843212).
 
 **export.php** — Used to export URL:s from WordPress
 
-**push.js** - Nodejs script used to register a bunch of URL:s at cXense
+**push.js** — Nodejs script used to register a bunch of URL:s at cXense
 
 
 ## Usage
@@ -27,7 +27,7 @@ this script several times will not create duplications of the extracted URL:s.
 ### Ping cXense crawler (push.js)
 
 This node-script will parse a file named "urls.txt" that should be located in the same directory and contain URL:s separated with a new line.
-You can either create this file manually yourself or generate it with extract script described above.
+You can either create this file manually yourself or generate it with the extract script described above.
 
 **urls.txt**
 

@@ -1,7 +1,7 @@
 /**
  * This is a script that can be used to register a bunch of URL:s at cxense
  *
- * 1. Create a file in this directory named urlQueue.txt where you put all your URL:s separated
+ * 1. Create a file in this directory named urls.txt where you put all your URL:s separated
  * with a new line
  *
  * 2. Call this script from command line

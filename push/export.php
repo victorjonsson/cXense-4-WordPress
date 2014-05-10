@@ -1,17 +1,16 @@
 <?php
 /**
- * File used to export URL:s to WordPress posts and saves them to file urls.txt
+ * File used to export URL:s for WordPress posts and saves them to file urls.txt
  *
  * Usage:
  *  $ php ./export.php sport    # extract all urls from category "sport"
  *  $ php ./export 231          # extract all urls from category with id 231
  *  $ php ./export              # extract all urls
  *
- * This script will extract 500 posts per second (to reduce allocated resources)
- * until all URLs of the posts in the declared category is extracted
+ * - This script will extract 500 posts per second (to reduce allocated resources)
+ *   until all URLs of the posts in the declared category is extracted
  *
- * Running this script several times will not create duplications of the extracted
- * URL:s. So you can run this script several times and the same urls will
+ * - Running this script several times will not create duplications of the extracted
  *
  */
 
