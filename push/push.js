@@ -45,7 +45,7 @@ var fs = require('fs'),
         req.on('error', function(e) {
             errorCallback(e, URL);
         });
-        req.setTimeout(300);
+        req.setTimeout(1000);
         req.write(sendBody);
         req.end();
     },
@@ -58,7 +58,7 @@ var fs = require('fs'),
         console.log(str);
     };
 
-https.globalAgent.maxSockets = 500; // may need to modify this to suite your computers setup and resources
+https.globalAgent.maxSockets = 250; // may need to modify this to suite your computers setup and resources
 
 /*
  * Create authencation string
