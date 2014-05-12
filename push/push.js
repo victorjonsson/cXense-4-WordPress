@@ -37,12 +37,6 @@ var fs = require('fs'),
             res.on('data', function (body) {
                 collectedBody += body;
             });
-            res.on('error', function(e) {
-                errorCallback('response error', URL);
-            });
-            res.on('abort', function(e) {
-                errorCallback('abort', URL);
-            });
             res.on('end', function() {
                 callback(collectedBody, res.statusCode, URL);
             });
@@ -51,11 +45,7 @@ var fs = require('fs'),
         req.on('error', function(e) {
             errorCallback(e, URL);
         });
-        req.setTimeout(1000, function() {
-            var error = new Error('Time out');
-            error.code = timeoutErrorCode;
-            errorCallback(error, URL);
-        });
+        req.setTimeout(300);
         req.write(sendBody);
         req.end();
     },
@@ -68,7 +58,7 @@ var fs = require('fs'),
         console.log(str);
     };
 
-https.globalAgent.maxSockets = 50; // may need to modify this to suite your computers setup and resources
+https.globalAgent.maxSockets = 500; // may need to modify this to suite your computers setup and resources
 
 /*
  * Create authencation string
@@ -98,57 +88,67 @@ rd.on('close', function() {
      */
     out('- ' +urlQueue.length+ ' URL:s loaded into memory');
 
+    // give info about failed pushes when we're finished
+    process.on('exit', function() {
+        if( refused.length ) {
+            out('\n*** The following URL:s were not pushed due to unexpected server response from cXense:\n- '+refused.join('\n- '));
+        }
+    });
+
     var numUrls = urlQueue.length,
-        numPushes = 0,
+        numFinishedPushes = 0,
+        refused = [],
         pushesLeft = function() {
-            return numUrls - numPushes;
+            return numUrls - numFinishedPushes;
         },
         percentLeft = function() {
             return Math.round( (pushesLeft() / numUrls) * 1000 ) / 10;
-        };
-
-
-    var sendInterval = setInterval(function() {
-
-        for( var i=0; i < 50; i++ ) {
-
-            if( urlQueue.length == 0 ) {
+        },
+        maybeQuitProcess = function() {
+            if( numUrls == numFinishedPushes && sendInterval ) {
                 clearInterval(sendInterval);
             }
-            else {
+        },
+        sendInterval = setInterval(function() {
 
-                var onError = function(err, url, putBackInQueue) {
-                        out('*** :( Failed pushing '+url.trim()+' due to '+err.message+' ('+pushesLeft()+' - '+percentLeft()+'% pushes left)');
-                        if( putBackInQueue !== false ) {
-                            // Put url back in queue
-                            urlQueue.push(url);
-                        } else {
-                            numPushes++;
-                        }
-                    },
-                    onSuccess = function(body, status, url) {
-
-                        if( status == 200 ) {
-                            out('* Pushed '+url+' successfully ('+pushesLeft()+' - '+percentLeft()+'% pushes left)');
-                            numPushes++;
-                        } else {
-                            onError(new Error('Server returned status '+status+' (body: '+body+')'), url, false);
-                        }
-                    },
-
-                // take one url out of the queue
-                url = urlQueue.splice(0, 1)[0];
-
-                // ping cxense
-                pingcXense(url, onSuccess, onError);
+            for( var i=0; i < 50; i++ ) {
 
                 if( urlQueue.length == 0 ) {
-                    clearInterval(sendInterval);
                     break;
                 }
-            }
-        }
+                else {
 
-    }, 250);
+                    var onError = function(err, url) {
+                            // Put url back in queue
+                            if( urlQueue.indexOf(url) == -1 )
+                                urlQueue.push(url);
+
+                            out('*** :( Failed pushing '+url.trim()+' due to '+err.message+'  will put URL back in queue ');
+                        },
+                        onSuccess = function(body, status, url) {
+                            numFinishedPushes++;
+                            maybeQuitProcess();
+                            var message = '';
+
+                            if( status == 200 ) {
+                                message += '* Pushed '+url+' successfully';
+                            } else {
+                                if( refused.indexOf(url) == -1 )
+                                    refused.push(url);
+                                message += '*** :( Refusing to push '+url.trim()+' due to unexpected server response '+status+' body: '+body;
+                            }
+
+                            out(message + ' ('+pushesLeft()+' - '+percentLeft()+'% pushes left)');
+                        },
+
+                    // take one url out of the queue
+                    url = urlQueue.splice(0, 1)[0];
+
+                    // ping cxense
+                    pingcXense(url, onSuccess, onError);
+                }
+            }
+
+        }, 250);
 
 });
