@@ -50,10 +50,6 @@ if( is_admin() ) {
             }
         );
         wp_enqueue_script('admin-'.$js_hook, CXENSE_PLUGIN_URL.'templates/admin/admin-ui.js', array('jquery'), CXENSE_PLUGIN_VERSION);
-        wp_enqueue_script('cxense-data-push', CXENSE_PLUGIN_URL.'templates/admin/data-push.js', array('jquery'), CXENSE_PLUGIN_VERSION);
-        $data = array('post_url' => CXENSE_PLUGIN_URL.'templates/admin/data-push.php');
-        wp_localize_script('cxense-data-push', 'cxense', $data);
-        require __DIR__.'/templates/admin/data-push.php';
     });
 
     add_action('admin_init', function() {

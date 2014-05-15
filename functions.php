@@ -10,15 +10,6 @@ function cxense_ping_crawler($post_id) {
 }
 
 /**
- * Get all posts in db to make a ping in the whole site
- * @return string
- */
-
-function cxense_getPosts(){
-    return CxenseAPI::getPosts();
-}
-
-/**
  * Output content profiling meta tags (open-graph and cXenseParse)
  * @param string|null $location Override current URL
  * @param bool|string $site_name
