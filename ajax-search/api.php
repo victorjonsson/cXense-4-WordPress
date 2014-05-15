@@ -41,7 +41,7 @@ if(isset($_POST['searchTerm']) && isset($_POST['selected']) && isset($_POST['sor
         $title = isset($match['document']['fields']['title']) ? $match['document']['fields']['title'] : '';
         $description = isset($match['document']['fields']['description']) ? $match['document']['fields']['description'] : '';
         $body = isset($match['document']['fields']['body'][0]) ? $match['document']['fields']['body'][0] : '';
-        $date = isset($match['document']['fields']['timestamp']) ? date('Y-m-d H:i',strtotime($match['document']['fields']['timestamp'])) : '';
+        $date = isset($match['document']['fields']['og-article-published-time']) ? date('Y-m-d H:i',strtotime($match['document']['fields']['og-article-published-time'])) : '';
         $image = isset($match['document']['fields']['thumbnail']) ? $match['document']['fields']['thumbnail'] : '';
         if($display_image){
             $show_image = '<div class="search-image"><img src="'.$image.'" alt="search-image"></div>';

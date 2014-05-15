@@ -188,7 +188,7 @@ function cxense_search($query, $args) {
         'columns' => 'title,description,body',
         'count' => 10,
         'pagination' => 0,
-        'sort' => 'timestamp:desc',
+        'sort' => 'og-article-published-time:desc',
         'cache_ttl' => HOUR_IN_SECONDS,
         'site_id' => cxense_get_opt('cxense_site_id'),
     );
