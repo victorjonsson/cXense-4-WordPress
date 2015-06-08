@@ -48,27 +48,27 @@ class Cxense_Widget extends WP_Widget {
         ?>
 
         <ul class="nav nav--stacked" id="cxenseWidget">
-            <?
+            <?php
             $data = json_decode($this->getCxenseContent(isset($instance['widget_id']) ? $instance['widget_id'] : ''),true);
 
             foreach ($data['items'] as $item) {
                 ?>
                 <li>
                     <article class="article-promo article-promo--separator push--bottom soft--bottom">
-                    <a href="<?= isset($item['click_url']) ? $item['click_url'] : '' ?>">
+                    <a href="<?php echo isset($item['click_url']) ? $item['click_url'] : '' ?>">
                         <div class="media__body">
-                            <h4 class="article-promo__title"><?= isset($item['title']) ? $item['title'] : '' ?></h4>
-                            <span><?= isset($item['description']) ? $item['description'] : ''?></span>
+                            <h4 class="article-promo__title"><?php echo isset($item['title']) ? $item['title'] : '' ?></h4>
+                            <span><?php echo isset($item['description']) ? $item['description'] : ''?></span>
                         </div>
                     </a>
                     </article>
                 </li>
-                <?
+                <?php
             }
             ?>
         </ul>
 
-        <?
+        <?php
     }
 
     private function getCxenseContent($widgetID){
