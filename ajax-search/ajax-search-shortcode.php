@@ -9,7 +9,7 @@ function cxense_output_ajax_search() {
         ?> <script type="application/javascript"> jQuery(document).ready(function(){
                 cxenseSearch();
             })</script>
-        <?
+        <?php
     }
     ?>
     <div class="search-wrapper">
@@ -50,7 +50,8 @@ function cxense_output_ajax_search() {
 
 
     <div class="search-results js-search-results"></div>
-<?
+<?php
 
 }
 add_shortcode('cxense-search', 'cxense_output_ajax_search');
+?>
