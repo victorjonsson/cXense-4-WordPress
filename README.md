@@ -42,7 +42,7 @@ Use this constant if you want to define which post types that should be recommen
 
 ## Actions and filters
 
-*cxense_is_recommendable* — Whether or not current URL should be recommendable (strings 'true' or 'false'). Use this filter if you don't wont certain posts to be recommended by the recommendations widgets provided by cXense.
+*cxense_is_recommendable* — Whether or not current URL should be recommendable (strings 'true' or 'false'). Use this filter if you don't want certain posts to be recommended by the recommendations widgets provided by cXense.
 
 *cxense_og_url* — Filters the current url that is used as og:url.
 
