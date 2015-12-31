@@ -15,21 +15,21 @@
 
         <div id="cxense_widgets">
             <table class="widefat">
-            <?php if( $widget_opts = cxense_get_opt('cxense_widgets_options') ):
+            <?php if( $widget_opts = cxense_get_opt('cxense_widgets_options') ){
                 $i = 0;
                 foreach ($widget_opts as $widget) {
                     ?>
                     <tr>
                         <td><input style="width: 100%" type="button" class="button-secondary" value="Ta Bort" onclick="CxenseAdmin.removeWidget(jQuery(this).parent().parent())"/></td>
-                        <td style="width: 45%"><input style="width: 100%" type="text" name="cxense_widgets_options[<?php echo $i ?>][key]" value="<?= $widget['key']?>" /></td>
-                        <td style="width: 45%"><input style="width: 100%" type="text" name="cxense_widgets_options[<?php echo $i ?>][widget_id]" value="<?= $widget['widget_id']?>" /></td>
+                        <td style="width: 45%"><input style="width: 100%" type="text" name="cxense_widgets_options[<?= $i ?>][key]" value="<?= $widget['key'] ?>" /></td>
+                        <td style="width: 45%"><input style="width: 100%" type="text" name="cxense_widgets_options[<?= $i ?>][widget_id]" value="<?= $widget['widget_id'] ?>" /></td>
                         <br/>
                     </tr>
-                    <?
+                    <?php
                     $i++;
                 }
-                ?>
-            <?php endif; ?>
+            }
+            ?>
             </table>
         </div>
 
